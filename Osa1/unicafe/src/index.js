@@ -6,15 +6,37 @@ const Header = (props) => {
   return <h1>{props.course}</h1>
 }
 
-const Button = (props) => (
-  <button onClick={props.handleClick}>
-    {props.text}
-  </button>
-)
-
 const arrSum = total => total.reduce((a,b) => a + b, 0) / total.length
 
-const Percentage = (total, good) => (good / total.length) * 100
+const Percentage = (total, good) => ((good / total.length) * 100) + " %"
+
+const StatisticLine = (props) => {
+  return (
+  <tr>
+    <td>{props.text}  {props.value}</td>
+  </tr>
+  )
+}
+
+const Statistics = (props) => {
+  if (props.total.length === 0) {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
+  return (
+    <table>
+      <StatisticLine text="good" value ={props.good} />
+      <StatisticLine text="neutral" value ={props.neutral} />
+      <StatisticLine text="bad" value ={props.bad} />
+      <StatisticLine text="total" value ={props.total.length} />
+      <StatisticLine text="average" value ={arrSum(props.total)} />
+      <StatisticLine text="positive" value ={Percentage(props.total, props.good)}/>
+    </table>
+    )
+  }
 
 const App = () => {
   // tallenna napit omaan tilaansa
@@ -47,12 +69,7 @@ const App = () => {
       <button onClick={handleNeutralClick}>neutral</button>
       <button onClick={handleBadClick}>bad</button>
       <Header course={name1} />
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
-      <p>Total: {total.length}</p>
-      <p>Average: {arrSum(total)}</p>
-      <p>Positive: {Percentage(total, good)} %</p>
+      <Statistics good={good} bad={bad} neutral={neutral} total={total}/>
     </div>
   )
 }
@@ -60,4 +77,3 @@ const App = () => {
 ReactDOM.render(<App />, 
   document.getElementById('root')
 )
-
